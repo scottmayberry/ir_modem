@@ -482,7 +482,7 @@ char convertSymbolsToByteAtIndexWithHamming(int incomingSymbolsTempIndex)
 ////////Shared Functions/////////
 void loop()
 {
-  if (!modulationActive || !incomingSignalDetected)
+  if (!modulationActive && !incomingSignalDetected)
   {
     readIncomingSerialDataForModulation();
   }
