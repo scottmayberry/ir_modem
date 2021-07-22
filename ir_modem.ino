@@ -5,7 +5,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define MESSAGE_MAXIMUM_SYMBOL_SIZE 2048
+#define MESSAGE_MAXIMUM_SYMBOL_SIZE 512
 #define NUM_PERIODS 20
 #define mod_pin 7
 #define demod_pin 10
@@ -251,7 +251,7 @@ void shiftTimerForwardLarge()
 
 void signalPingTimerCallback()
 {
-  pingReading = digitalReadFast(pin);
+  pingReading = digitalReadFast(demod_pin);
   sumOfPings += pingReading;
   pingCounter = (pingCounter + 1) % PINGS_PER_SYMBOL;
   if (pingCounter == numOfIndexesForShift)
@@ -363,14 +363,14 @@ void startMessage()
   if (!incomingSignalDetected)
   {
     incomingSignalWavePingTimer.begin(signalPingTimerCallback, microsUpdatePerPing);
-    detachInterrupt(digitalPinToInterrupt(pin));
+    detachInterrupt(digitalPinToInterrupt(demod_pin));
     incomingSignalDetected = true;
   }
 }
 
 void attachInterruptToPin()
 {
-  attachInterrupt(digitalPinToInterrupt(pin), &startMessage, RISING);
+  attachInterrupt(digitalPinToInterrupt(demod_pin), &startMessage, RISING);
 }
 
 void hammingCodeErrorCorrection()
